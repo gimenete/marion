@@ -6,6 +6,7 @@ A small Svelte app for testing Railway.
 
 ## ⚡️ Features
 
+- View date the server was deployed
 - View all plugin and Railway env vars available at runtime
 - Eat memory and burn CPU to test metrics and usage
 
