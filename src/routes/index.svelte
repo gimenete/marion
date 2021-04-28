@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { actionState } from "../actions";
   import Loader from "$lib/Loader.svelte";
   import { fetcher } from "../fetcher";
   import type { AppState } from "../types";
@@ -27,8 +26,8 @@
   });
 
   let memAmountMB = "100";
-  let memDuration = "1000";
-  let cpuDuration = "1000";
+  let memDuration = "2";
+  let cpuDuration = "2";
 
   const eatMemory = async () => {
     if (!memAmountMB || !memDuration) {
@@ -37,7 +36,6 @@
     }
 
     try {
-      error = null;
       state = await fetcher("/memory", {
         method: "POST",
         body: JSON.stringify({
@@ -45,6 +43,7 @@
           duration: parseInt(memDuration),
         }),
       });
+      error = null;
     } catch (e) {
       error = e.message;
     }
@@ -60,7 +59,7 @@
       error = null;
       state = await fetcher("/cpu", {
         method: "POST",
-        body: JSON.stringify({ duration: parseInt(memDuration) }),
+        body: JSON.stringify({ duration: parseInt(cpuDuration) }),
       });
     } catch (e) {
       error = e.message;
@@ -155,7 +154,7 @@
 
           <div>
             <label for="duration">Duration in seconds</label>
-            <input name="duration" placeholder="2" bind:value={memDuration} />
+            <input name="duration" placeholder="2" bind:value={cpuDuration} />
           </div>
 
           <button class="mt-auto">Burn</button>

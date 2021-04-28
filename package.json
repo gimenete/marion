@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
-    "start": "svelte-kit start --host --port ${PORT-3000}",
+    "start": "node build/index.js",
     "clean": "rm -rf .svelte build",
     "lint": "prettier --check . && eslint --ignore-path .gitignore .",
     "format": "prettier --write ."
