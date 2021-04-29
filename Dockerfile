@@ -3,7 +3,7 @@ FROM node:alpine
 # Create app directory
 WORKDIR /usr/src/app
 
-COPY package.json yarn.lock .
+COPY package.json yarn.lock ./
 
 # Install deps
 RUN yarn
