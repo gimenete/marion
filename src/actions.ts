@@ -1,10 +1,14 @@
 import type { ActionState, CPURequest, MemoryRequest } from "./types";
+import crypto from "crypto";
 
 export let actionState: ActionState = { type: "idle" };
 
 let timeout: NodeJS.Timeout | null = null;
 
 let shouldBurn = false;
+
+const MAX_BUFFER_SIZE = 2000000000;
+let buffers: Buffer[] = [];
 
 /**
  * Fill an array with amount MB for duration ms
@@ -19,6 +23,26 @@ export const eatMemory = (req: MemoryRequest): void => {
     console.log("Memory feast finished");
     clearActions();
   }, req.duration * 1000);
+
+  setTimeout(async () => {
+    let numBytes = req.amount * 1000 * 1000;
+
+    while (numBytes > 0) {
+      const amountToAlloc = Math.min(numBytes, MAX_BUFFER_SIZE);
+
+      const b = Buffer.alloc(amountToAlloc);
+      console.log(`Filled buffer of size ${b.byteLength}`);
+      crypto.randomFill(b, () => {
+        //
+      });
+
+      buffers.push(b);
+
+      numBytes -= amountToAlloc;
+    }
+
+    console.log(`Created ${buffers.length} buffers`);
+  }, 0);
 };
 
 /**
@@ -56,6 +80,7 @@ export const clearActions = (): void => {
   if (timeout != null) clearTimeout(timeout);
 
   // Clear memory
+  buffers = [];
 
   // Stop computing CPU
   shouldBurn = false;
