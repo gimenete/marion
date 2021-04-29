@@ -2,7 +2,7 @@
 
 <img src="https://static.wikia.nocookie.net/ttte/images/c/c6/MainMarionCGI.png/revision/latest/scale-to-width-down/700?cb=20190328121243" width="300" />
 
-A small Svelte app for testing Railway.
+A small [Svelte](https://kit.svelte.dev/) app for testing Railway.
 
 ## ⚡️ Features
 
