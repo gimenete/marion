@@ -28,6 +28,7 @@
   let memAmountMB = "100";
   let memDuration = "2";
   let cpuDuration = "2";
+  let fetchDuration = "2";
 
   const eatMemory = async () => {
     if (!memAmountMB || !memDuration) {
@@ -60,6 +61,23 @@
       state = await fetcher("/cpu", {
         method: "POST",
         body: JSON.stringify({ duration: parseInt(cpuDuration) }),
+      });
+    } catch (e) {
+      error = e.message;
+    }
+  };
+
+  const fetchData = async () => {
+    if (!fetchDuration) {
+      error = "Duration required";
+      return;
+    }
+
+    try {
+      error = null;
+      state = await fetcher("/fetch", {
+        method: "POST",
+        body: JSON.stringify({ duration: parseInt(fetchDuration) }),
       });
     } catch (e) {
       error = e.message;
@@ -158,6 +176,20 @@
           </div>
 
           <button class="mt-auto">Burn</button>
+        </form>
+
+        <form
+          class="cpu flex flex-col p-4 border border-blue-500 rounded-sm"
+          on:submit|preventDefault={fetchData}
+        >
+          <h4 class="font-medium mb-2">Fetch Data</h4>
+
+          <div class="mb-2">
+            <label for="duration">Duration in seconds</label>
+            <input name="duration" placeholder="2" bind:value={fetchDuration} />
+          </div>
+
+          <button class="mt-auto">Fetch</button>
         </form>
       </div>
     </div>

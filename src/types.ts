@@ -11,6 +11,11 @@ export type ActionState =
       type: "cpu";
       started: number;
       req: CPURequest;
+    }
+  | {
+      type: "fetch";
+      started: number;
+      req: FetchDataRequest;
     };
 
 export interface AppState {
@@ -25,5 +30,9 @@ export interface MemoryRequest {
 }
 
 export interface CPURequest {
+  duration: number;
+}
+
+export interface FetchDataRequest {
   duration: number;
 }

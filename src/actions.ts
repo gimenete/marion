@@ -1,14 +1,42 @@
-import type { ActionState, CPURequest, MemoryRequest } from "./types";
+import type {
+  ActionState,
+  CPURequest,
+  FetchDataRequest,
+  MemoryRequest,
+} from "./types";
 import crypto from "crypto";
 
 export let actionState: ActionState = { type: "idle" };
 
 let timeout: NodeJS.Timeout | null = null;
 
-let shouldBurn = false;
-
 const MAX_BUFFER_SIZE = 2000000000;
 let buffers: Buffer[] = [];
+
+const delay = (n: number) => new Promise(r => setTimeout(r, n));
+
+/**
+ * Fetch data from GitHub website for duration ms
+ * Result of data is not actually used
+ */
+export const fetchData = (req: FetchDataRequest): void => {
+  clearActions();
+
+  console.log("Fetching data", req);
+  actionState = { type: "fetch", started: new Date().getTime(), req };
+
+  timeout = setTimeout(() => {
+    console.log("Fetching data finished");
+    clearActions();
+  }, req.duration * 1000);
+
+  setTimeout(async () => {
+    while (actionState.type === "fetch") {
+      fetch("https://github.com");
+      await delay(100);
+    }
+  }, 0);
+};
 
 /**
  * Fill an array with amount MB for duration ms
@@ -33,7 +61,7 @@ export const eatMemory = (req: MemoryRequest): void => {
       const b = Buffer.alloc(amountToAlloc);
       console.log(`Filled buffer of size ${b.byteLength}`);
       crypto.randomFill(b, () => {
-        //
+        // empty
       });
 
       buffers.push(b);
@@ -58,15 +86,13 @@ export const burnCPU = (req: CPURequest): void => {
     clearActions();
   }, req.duration * 1000);
 
-  shouldBurn = true;
-
   setTimeout(async () => {
     // Every 100ms await so we have a chance to stop
     let t = new Date().getTime();
 
-    while (shouldBurn) {
+    while (actionState.type === "cpu") {
       if (new Date().getTime() - t > 100) {
-        await new Promise(r => setTimeout(r, 0));
+        await delay(0);
         t = new Date().getTime();
       }
     }
@@ -81,9 +107,6 @@ export const clearActions = (): void => {
 
   // Clear memory
   buffers = [];
-
-  // Stop computing CPU
-  shouldBurn = false;
 
   // Reset action state
   actionState = { type: "idle" };
