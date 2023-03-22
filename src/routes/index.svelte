@@ -98,7 +98,7 @@
 
 <main class="max-w-xl  mx-auto px-4 space-y-8">
   <header class="mt-12 mb-8">
-    <h1 class="text-3xl font-bold text-pink-600 mb-2">Marion</h1>
+    <h1 class="text-3xl font-bold text-pink-600 mb-2">Marion 1</h1>
     {#if state != null}
       <h2 class="text-sm text-gray-500">Started on {state.startDate}</h2>
     {/if}
